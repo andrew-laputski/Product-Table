@@ -1,0 +1,56 @@
+<!--
+ - Created by alaputsky on 9/9/2019.
+ -->
+
+<apex:page id="ProductDetailVF" controller="ProductTableController">
+    <apex:slds />
+
+    <style>
+        .header 	{background-color: #F7F3F3; border-top:1px solid #E8E3E3; border-bottom: 1px solid #E8E3E3;}
+        .header p 	{font-size: 24px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 10px 0;}
+        .main 		{display: flex; align-items: center;}
+
+        .image 		{width: 40%; text-align: center;}
+        .image img 	{height: 100vh; max-height: 350px; margin: 50px 0;}
+
+        .info 		{width: 60%; font-size: 14px;}
+        .info div 	{padding-bottom: 10px; margin: 0 50px;}
+        .titleText	{font-weight: bold;}
+        .footer 	{background-color: #F7F3F3; border-top: 1px solid #E8E3E3; border-bottom: 1px solid #E8E3E3; text-align: center; padding: 15px 0;}
+    </style>
+
+    <apex:form >
+        <apex:actionFunction action="{!redirectBack}"
+                             name="back"/>
+
+        <apex:actionFunction action="{!buy}"
+                             name="buyCont"/>
+    </apex:form>
+
+    <div class="header">
+        <p>{!productInfo[0].Name}</p>
+    </div>
+
+    <div class="main">
+        <div class="image">
+            <img id="theImage" src="{!productInfo[0].Image_Url__c}" alt="{!productInfo[0].Name}"/>
+        </div>
+
+        <div class="info">
+            <div>
+                <p class="titleText">AMOUNT:</p>
+                <p>{!productInfo[0].Units_Available__c}</p>
+            </div>
+
+            <div>
+                <p class="titleText">DESCRIPTION:</p>
+                <p>{!productInfo[0].Product_Description__c}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button class="slds-button slds-button_neutral" onclick="back()">To Shopping</button>
+        <button class="slds-button slds-button_brand" onclick="buyCont()">Buy</button>
+    </div>
+</apex:page>

@@ -1,0 +1,44 @@
+<!--
+ - Created by alaputsky on 9/9/2019.
+ -->
+
+<apex:page id="ProductTableVF" controller="ProductTableController">
+    <apex:slds />
+    <style>
+        .img	{text-align: center;}
+    </style>
+
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!productsList}" var="product">
+
+            <apex:column width="250" headerValue="IMAGE">
+                <div class="img">
+                    <a href="{!URLFOR($Page.ProductDetailVF, null, [Id=product.Id])}" target="_blank">
+                        <img  hight="350" id="theImage" src="{!product.Image_Url__c}" alt="{!product.Name}"/>
+                    </a>
+                </div>
+            </apex:column>
+
+            <apex:column width="100">
+                <a href="{!URLFOR($Page.ProductDetailVF, null, [Id=product.Id])}" target="_blank">{!product.Name}</a>
+            </apex:column>
+
+            <apex:column width="600" headerValue="DESCRIPTION">
+                {!IF(LEN(product.Product_Description__c) > 100, LEFT(product.Product_Description__c, 100) + '...', product.Product_Description__c)}
+
+                <apex:outputLink value="{!URLFOR($Page.ProductDetailVF, null, [Id=product.Id])}" target="_blank">
+                    {!IF(LEN(product.Product_Description__c) > 100, 'More', '')}
+                </apex:outputLink>
+            </apex:column>
+
+            <apex:column width="120" headerValue="PRICE" value="{!product.Unit_Price__c}"/>
+
+            <apex:column width="150">
+                <form action="/apex/OrderTableVF">
+                    <button class="slds-button slds-button_brand" name="id" value="{!product.Id}">Buy</button>
+                </form>
+            </apex:column>
+
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

@@ -1,0 +1,82 @@
+<!--
+ - Created by alaputsky on 9/9/2019.
+ -->
+
+<apex:page id="OrderTableVF" controller="OrderTableController">
+    <apex:slds />
+
+    <style>
+    	.container 		{display: flex; justify-content: center;}
+        .header 		{background-color: #F7F3F3; border-top:1px solid #E8E3E3; border-bottom: 1px solid #E8E3E3; margin-bottom: 20px;}
+        .header p 		{font-size: 24px; font-weight: bold; text-align: center; padding: 10px 0;}
+        .block			{width: 100%; font-size: 14px;}
+        .block .titleText	{padding-right: 15px;}
+        .secondBlock .mainBlock div {justify-content: flex-start;}
+        .titleText		{font-weight: bold; width: 150px; text-align: right;}
+        .mainBlock		{width: 80%;}
+        .mainBlock div	{display: flex; justify-content: flex-end; margin: 10px 0;}
+        .footer 		{background-color: #F7F3F3; border-top: 1px solid #E8E3E3; border-bottom: 1px solid #E8E3E3; text-align: center; padding: 15px 0; margin-top: 20px;}
+        input[type="submit"]:hover {opacity:0.9; transition: 0.5s; background: #0f4283;}
+        .cost::after {content: " $"};
+        .fail {color: red; background: #F7F3F3;}
+    </style>
+
+    <apex:form id="form">
+        <div class="container">
+            <div class="block firstBlock">
+                <div class="header"><p>Contact Information</p></div>
+                <div class="mainBlock">
+                    <div>
+                        <p class="titleText">Email</p>
+                        <p>
+                            <apex:inputText value="{!Email}" id="email" />
+                        </p>
+                    </div>
+                    <div>
+                        <p class="titleText">First Name</p>
+                        <p><apex:inputText value="{!FirstName}"/></p>
+                    </div>
+                    <div>
+                        <p class="titleText">Last Name</p>
+                        <p><apex:inputText value="{!LastName}" id="LastName" /></p>
+                    </div>
+                </div>
+            </div>
+            <div class="block secondBlock">
+                <div class="header"><p>Product Information</p></div>
+                <div class="mainBlock">
+                    <div>
+                        <p class="titleText">Product Name</p>
+                        <p>{!products[0].Name}</p>
+                    </div>
+                    <div>
+                        <p class="titleText">Cost</p>
+                        <p class="cost">{!products[0].Unit_Price__c}</p>
+                    </div>
+                    <div>
+                        <p class="titleText">Unit Count</p>
+                        <p><apex:inputText id="unit" value="{!quantity}"  /></p>
+                    </div>
+                    <div>
+                        <p class="titleText">Total Amount</p>
+                        <p id="unit_cost"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div><apex:pageMessages id="showmsg"></apex:pageMessages></div>
+        <div class="footer">
+            <apex:commandButton style="color: rgb(27, 82, 151); background: #fff; padding: 5px 10px; margin-right: 10px;" action="{!redirectBack}" value="Cancel"/>
+            <apex:commandButton style="padding: 5px 10px; background: rgb(27, 82, 151); border-color: rgb(27, 82, 151); color: rgb(255, 255, 255);" action="{!checkOut}" value="Checkout"/>
+        </div>
+
+
+        <script>
+            var input = document.getElementById('{!$Component.form.unit}');
+            var unit_cost = document.querySelector('#unit_cost');
+            input.addEventListener('input', function() {
+                unit_cost.textContent = input.value * {!products[0].Unit_Price__c}+' $';
+            });
+        </script>
+    </apex:form>
+</apex:page>
