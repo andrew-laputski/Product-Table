@@ -37,12 +37,19 @@ public with sharing class OrderTableControllerTest {
         products.add(product2);
         insert products;
 
-        List<Contact> contacts = new List<Contact>();
-        Contact newContact = new Contact(
-                FirstName = 'Test',
-                LastName = 'TestP',
-                Email = 'test@test.com');
-        contacts.add(newContact);
+//        List<Contact> contacts = new List<Contact>();
+//        Contact newContact = new Contact(
+//                FirstName = 'Test',
+//                LastName = 'TestP',
+//                Email = 'test@test.com');
+//        contacts.add(newContact);
+        List<Contact> contacts = new List<Contact> {
+                new Contact(
+                        FirstName = 'Test',
+                        LastName = 'TestP',
+                        Email = 'test@test.com'
+                )
+        };
         insert contacts;
     }
 
@@ -66,13 +73,10 @@ public with sharing class OrderTableControllerTest {
                 FROM Product_Table__c
                 WHERE Id = :allProducts[0].Id
         ];
-
-        System.debug('Expected=== ' + product);
-        System.debug('Actual=== ' + orderTable.products);
+        Test.stopTest();
 
         System.assertEquals(product, orderTable.products);
         System.assertEquals(1, orderTable.products.size());
-        Test.stopTest();
     }
 
     @isTest static void redirectBack_Test() {
@@ -92,12 +96,9 @@ public with sharing class OrderTableControllerTest {
         pageReference = orderTable.redirectBack();
 
         PageReference pageRefProductTableVF = Page.ProductTableVF;
-
-        System.debug('Expected=== ' + pageReference.getUrl());
-        System.debug('Actual=== ' + pageRefProductTableVF.getUrl());
+        Test.stopTest();
 
         System.assertEquals(pageRefProductTableVF.getUrl(), pageReference.getUrl());
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithExistingContactTest() {
@@ -119,7 +120,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = allContacts[0].FirstName;
         orderTable.LastName = allContacts[0].LastName;
@@ -132,11 +132,9 @@ public with sharing class OrderTableControllerTest {
                 FROM Order_Table__c
                 WHERE Product__c = :allProducts[0].Id
         ];
-        System.debug('allContacts[0].Id(Expected)=== ' + allContacts[0].Id);
-        System.debug('order.Contact__c(Actual)=== ' + order.Contact__c);
+        Test.stopTest();
 
         System.assertEquals(allContacts[0].Id, order.Contact__c);
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithExistingWrongContactTest() {
@@ -158,7 +156,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = allContacts[0].FirstName;
         orderTable.LastName = '';
@@ -168,9 +165,9 @@ public with sharing class OrderTableControllerTest {
 
         System.DmlException e = new System.DmlException();
         String message = e.getMessage();
+        Test.stopTest();
 
         System.assertEquals('Script-thrown exception', message);
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithNewContactTest() {
@@ -186,7 +183,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = 'New';
         orderTable.LastName = 'Contact';
@@ -205,11 +201,9 @@ public with sharing class OrderTableControllerTest {
                 FROM Order_Table__c
                 WHERE Product__c = :allProducts[0].Id
         ];
-        System.debug('contactId(Expected)=== ' + contact.Id);
-        System.debug('order.Contact__c(Actual)=== ' + order.Contact__c);
+        Test.stopTest();
 
         System.assertEquals(contact.Id, order.Contact__c);
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithWrongContact() {
@@ -225,7 +219,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = 'New';
         orderTable.LastName = '';
@@ -235,9 +228,9 @@ public with sharing class OrderTableControllerTest {
 
         System.DmlException e = new System.DmlException();
         String message = e.getMessage();
+        Test.stopTest();
 
         System.assertEquals('Script-thrown exception', message);
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithBigQuantityTest() {
@@ -259,7 +252,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = allContacts[0].FirstName;
         orderTable.LastName = allContacts[0].LastName;
@@ -268,10 +260,9 @@ public with sharing class OrderTableControllerTest {
         orderTable.checkOut();
 
         String message = ApexPages.getMessages()[0].getDetail();
-        System.debug('message=== ' + message);
+        Test.stopTest();
 
         System.assertEquals('Недостаточно товара!', message);
-        Test.stopTest();
     }
 
     @isTest static void checkoutWithNegativeQuantityTest() {
@@ -293,7 +284,6 @@ public with sharing class OrderTableControllerTest {
         Test.setCurrentPage(pageReference);
 
         OrderTableController orderTable = new OrderTableController();
-        System.debug('productId=== ' + orderTable.productId);
 
         orderTable.FirstName = allContacts[0].FirstName;
         orderTable.LastName = allContacts[0].LastName;
@@ -302,9 +292,8 @@ public with sharing class OrderTableControllerTest {
         orderTable.checkOut();
 
         String message = ApexPages.getMessages()[0].getDetail();
-        System.debug('message=== ' + message);
+        Test.stopTest();
 
         System.assertEquals('ВВедите положительное количество товара!', message);
-        Test.stopTest();
     }
 }

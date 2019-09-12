@@ -27,7 +27,7 @@ public with sharing class OrderTableController {
         return pageRef;
     }
 
-    public String checkOut() {
+    public void checkOut() {
         contacts = [
                 SELECT Email, FirstName, LastName
                 FROM Contact
@@ -39,27 +39,20 @@ public with sharing class OrderTableController {
                     FirstName = FirstName,
                     LastName = LastName,
                     Email = Email);
-            try {
-                insert newContact;
-                contacts.add(newContact);
-            } catch (DmlException ex) {
-                return null;
-            }
+            contacts.add(newContact);
         } else {
             for (Integer i = 0; i < contacts.size(); i++) {
                 contacts[i].FirstName = FirstName;
                 contacts[i].LastName = LastName;
             }
-            try {
-                update contacts;
-            } catch (DmlException ex) {
-                return null;
-            }
+        }
+        try {
+            upsert contacts;
+        } catch (DmlException ex) {
+            return;
         }
 
         insertOrder();
-
-        return null;
     }
 
     public void insertOrder() {
@@ -72,15 +65,23 @@ public with sharing class OrderTableController {
 
         products[0].Units_Available__c = products[0].Units_Available__c - Decimal.valueOf(quantity);
 
+        Savepoint sp = Database.setSavepoint();
+        try {
+            insert order;
+        } catch (DmlException ex) {
+            return;
+        }
+
         if(quantity > 0) {
             if (products[0].Units_Available__c >= 0) {
                 update products;
-                insert order;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, 'Заказ принят!'));
             } else {
+                Database.rollback(sp);
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL, 'Недостаточно товара!'));
             }
         } else {
+            Database.rollback(sp);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL, 'ВВедите положительное количество товара!'));
         }
     }

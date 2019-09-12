@@ -28,7 +28,7 @@ public with sharing class ProductTableControllerTest {
         insert products;
     }
 
-    static testMethod void ProductTableController() {
+    @isTest static void ProductTableController() {
         List<Product_Table__c> allProducts = new List<Product_Table__c>();
         allProducts = [
                 SELECT Id, Name, Image_Url__c, Product_Description__c, Unit_Price__c
@@ -39,16 +39,13 @@ public with sharing class ProductTableControllerTest {
 
         Test.startTest();
         ProductTableController productTable = new ProductTableController();
-
-        System.debug('Expected=== ' + allProducts);
-        System.debug('Actual=== ' + productTable.productsList);
+        Test.stopTest();
 
         System.assertEquals(allProducts, productTable.productsList);
         System.assertEquals(allProducts.size(), productTable.productsList.size());
-        Test.stopTest();
     }
 
-    static testMethod void buyTest() {
+    @isTest static void buyTest() {
         List<Product_Table__c> allProducts = new List<Product_Table__c>();
         allProducts = [
                 SELECT Id, Name, Image_Url__c, Product_Description__c, Unit_Price__c
@@ -60,15 +57,12 @@ public with sharing class ProductTableControllerTest {
         productTable.productId = allProducts[0].Id;
 
         PageReference pageRef = productTable.buy();
-
-        System.debug('Expected=== ' + allProducts[0].Id);
-        System.debug('Actual=== ' + pageRef.getParameters().get('Id'));
+        Test.stopTest();
 
         System.assertEquals(allProducts[0].Id, pageRef.getParameters().get('Id'));
-        Test.stopTest();
     }
 
-    static testMethod void redirectBack_Test() {
+    @isTest static void redirectBack_Test() {
         List<Product_Table__c> allProducts = new List<Product_Table__c>();
         allProducts = [
                 SELECT Id, Name, Image_Url__c, Product_Description__c, Unit_Price__c
@@ -85,11 +79,8 @@ public with sharing class ProductTableControllerTest {
         pageReference = productTable.redirectBack();
 
         PageReference pageRefProductTableVF = Page.ProductTableVF;
-
-        System.debug('Expected=== ' + pageRefProductTableVF.getUrl());
-        System.debug('Actual=== ' + pageReference.getUrl());
+        Test.stopTest();
 
         System.assertEquals(pageRefProductTableVF.getUrl(), pageReference.getUrl());
-        Test.stopTest();
     }
 }
